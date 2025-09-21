@@ -360,7 +360,7 @@ int main()
 		//CABINA
 	//	model = glm::mat4(1.0);
 	//	model = glm::translate(model, glm::vec3(0.0f, 5.5f, -4.0));
-	//	modelaux = model;
+	//	modelaux = modelaux1 = model;
 	//	model = glm::scale(model, glm::vec3(5.0f, 3.0f, 3.0f));
 	//	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	//	color = glm::vec3(0.0f, 1.0f, 0.0f);
@@ -370,6 +370,7 @@ int main()
 	//	// base
 	//	model = modelaux;
 	//	model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
+	//	modelaux = model;
 	//	model = glm::scale(model, glm::vec3(6.0f, 3.0f, 6.0f));
 	//	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	//	color = glm::vec3(1.0f, 0.0f, 0.0f);
@@ -380,7 +381,7 @@ int main()
 	//	model = modelaux;
 	//	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 	//	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-	//	model = glm::translate(model, glm::vec3(-3.3f, 3.65f, 2.6f));
+	//	model = glm::translate(model, glm::vec3(-1.3f, 3.65f, 2.6f));
 	//	model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
 	//	model = glm::rotate(model, glm::radians(mainWindow.getarticulacion5()), glm::vec3(0.0f, 1.0f, 0.0f));
 	//	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
@@ -392,7 +393,7 @@ int main()
 	//	model = modelaux;
 	//	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 	//	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-	//	model = glm::translate(model, glm::vec3(-3.3f, -3.65f, 2.6f));
+	//	model = glm::translate(model, glm::vec3(-1.3f, -3.65f, 2.6f));
 	//	model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
 	//	model = glm::rotate(model, glm::radians(mainWindow.getarticulacion6()), glm::vec3(0.0f, 1.0f, 0.0f));
 	//	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
@@ -404,7 +405,7 @@ int main()
 	//	model = modelaux;
 	//	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 	//	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-	//	model = glm::translate(model, glm::vec3(-3.3f, -3.65f, -2.6f));
+	//	model = glm::translate(model, glm::vec3(-1.3f, -3.65f, -2.6f));
 	//	model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
 	//	model = glm::rotate(model, glm::radians(mainWindow.getarticulacion7()), glm::vec3(0.0f, 1.0f, 0.0f));
 	//	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
@@ -416,7 +417,7 @@ int main()
 	//	model = modelaux;
 	//	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 	//	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-	//	model = glm::translate(model, glm::vec3(-3.3f, 3.65f, -2.6f));
+	//	model = glm::translate(model, glm::vec3(-1.3f, 3.65f, -2.6f));
 	//	model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
 	//	model = glm::rotate(model, glm::radians(mainWindow.getarticulacion8()), glm::vec3(0.0f, 1.0f, 0.0f));
 	//	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
@@ -424,6 +425,7 @@ int main()
 	//	glUniform3fv(uniformColor, 1, glm::value_ptr(color)); //para cambiar el color del objetos
 	//	meshList[5]->RenderMeshGeometry();
 
+	//	modelaux = modelaux1;
 
 	//	model = modelaux;
 	//	model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
@@ -520,7 +522,6 @@ int main()
 	//	model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
 	//	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	//	meshList[0]->RenderMesh(); //dibuja cubo y pirámide triangular
-
 
 
 		// ORNITORRINCO ROBOT ARTICULADO
@@ -822,6 +823,7 @@ int main()
 		color = glm::vec3(0.347f, 0.165f, 0.165f);
 		glUniform3fv(uniformColor, 1, glm::value_ptr(color)); //para cambiar el color del objetos
 		meshList[0]->RenderMesh();
+
 
 
 		glUseProgram(0);
