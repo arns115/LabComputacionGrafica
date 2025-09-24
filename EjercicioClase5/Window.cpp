@@ -1,4 +1,4 @@
-#include "Window.h"
+ï»¿#include "Window.h"
 
 Window::Window()
 {
@@ -28,7 +28,7 @@ Window::Window(GLint windowWidth, GLint windowHeight)
 	articulacion10 = 0.0f;
 	articulacion11 = 0.0f;
 	articulacion12 = 0.0f;
-	
+
 	for (size_t i = 0; i < 1024; i++)
 	{
 		keys[i] = 0;
@@ -36,10 +36,10 @@ Window::Window(GLint windowWidth, GLint windowHeight)
 }
 int Window::Initialise()
 {
-	//Inicialización de GLFW
+	//Inicializaciï¿½n de GLFW
 	if (!glfwInit())
 	{
-		printf("Falló inicializar GLFW");
+		printf("Fallï¿½ inicializar GLFW");
 		glfwTerminate();
 		return 1;
 	}
@@ -51,7 +51,7 @@ int Window::Initialise()
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
 	//CREAR VENTANA
-	mainWindow = glfwCreateWindow(width, height, "Practica 04: Modelado Jerarquico", NULL, NULL);
+	mainWindow = glfwCreateWindow(width, height, "Practica 05: Optimizacion y carga de modelos", NULL, NULL);
 
 	if (!mainWindow)
 	{
@@ -59,7 +59,7 @@ int Window::Initialise()
 		glfwTerminate();
 		return 1;
 	}
-	//Obtener tamaño de Buffer
+	//Obtener tamaï¿½o de Buffer
 	glfwGetFramebufferSize(mainWindow, &bufferWidth, &bufferHeight);
 
 	//asignar el contexto
@@ -74,18 +74,18 @@ int Window::Initialise()
 
 	if (glewInit() != GLEW_OK)
 	{
-		printf("Falló inicialización de GLEW");
+		printf("Fallï¿½ inicializaciï¿½n de GLEW");
 		glfwDestroyWindow(mainWindow);
 		glfwTerminate();
 		return 1;
 	}
 
 	glEnable(GL_DEPTH_TEST); //HABILITAR BUFFER DE PROFUNDIDAD
-							 // Asignar valores de la ventana y coordenadas
-							 
-							 //Asignar Viewport
+	// Asignar valores de la ventana y coordenadas
+
+	//Asignar Viewport
 	glViewport(0, 0, bufferWidth, bufferHeight);
-	//Callback para detectar que se está usando la ventana
+	//Callback para detectar que se estï¿½ usando la ventana
 	glfwSetWindowUserPointer(mainWindow, this);
 }
 
@@ -118,7 +118,7 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 		glfwSetWindowShouldClose(window, GL_TRUE);
 	}
 
-	
+
 	if (key == GLFW_KEY_E)
 	{
 		theWindow->rotax += 10.0;
@@ -138,39 +138,55 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 
 	if (key == GLFW_KEY_G)
 	{
-		theWindow->articulacion2 += 10.0;
+		theWindow->articulacion2 += 5.0;
+		if (theWindow->articulacion2 > 45.0)
+			theWindow->articulacion2 = 45.0;
 	}
 	if (key == GLFW_KEY_H)
 	{
-		theWindow->articulacion3 += 10.0;
+		theWindow->articulacion2 -= 5.0;
+		if (theWindow->articulacion2 < -45.0)
+			theWindow->articulacion2 = -45.0;
 	}
 	if (key == GLFW_KEY_J)
 	{
-		theWindow->articulacion4 += 10.0;
+		theWindow->articulacion4 += 5.0;
+		if (theWindow->articulacion4 > 45.0)
+			theWindow->articulacion4 = 45.0;
 	}
 	if (key == GLFW_KEY_K)
 	{
-		theWindow->articulacion5 += 10.0;
+		theWindow->articulacion4 -= 5.0;
+		if (theWindow->articulacion4 < -45.0)
+			theWindow->articulacion4 = -45.0;
 	}
 	if (key == GLFW_KEY_L)
 	{
-		theWindow->articulacion6 += 10.0;
+		theWindow->articulacion5 += 5.0;
 	}
 	if (key == GLFW_KEY_O)
 	{
-		theWindow->articulacion7 += 10.0;
+		theWindow->articulacion6 += 5.0;
+		if (theWindow->articulacion6 > 45.0)
+			theWindow->articulacion6 = 45.0;
 	}
 	if (key == GLFW_KEY_P)
 	{
-		theWindow->articulacion8 += 10.0;
+		theWindow->articulacion6 -= 5.0;
+		if (theWindow->articulacion6 < -45.0)
+			theWindow->articulacion6 = -45.0;
 	}
 	if (key == GLFW_KEY_Y)
 	{
-		theWindow->articulacion9 += 10.0;
+		theWindow->articulacion8 += 5.0;
+		if (theWindow->articulacion8 > 45.0)
+			theWindow->articulacion8 = 45.0;
 	}
 	if (key == GLFW_KEY_U)
 	{
-		theWindow->articulacion10 += 10.0;
+		theWindow->articulacion8 -= 5.0;
+		if(theWindow->articulacion8<-45.0)
+			theWindow->articulacion8 = -45.0;
 	}
 	if (key == GLFW_KEY_I)
 	{
