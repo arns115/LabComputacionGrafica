@@ -1,4 +1,4 @@
-ï»¿#include "Window.h"
+#include "Window.h"
 
 Window::Window()
 {
@@ -13,22 +13,8 @@ Window::Window(GLint windowWidth, GLint windowHeight)
 {
 	width = windowWidth;
 	height = windowHeight;
-	rotax = 0.0f;
-	rotay = 0.0f;
-	rotaz = 0.0f;
-	articulacion1 = 0.0f;
-	articulacion2 = 0.0f;
-	articulacion3 = 0.0f;
-	articulacion4 = 0.0f;
-	articulacion5 = 0.0f;
-	articulacion6 = 0.0f;
-	articulacion7 = 0.0f;
-	articulacion8 = 0.0f;
-	articulacion9 = 0.0f;
-	articulacion10 = 0.0f;
-	articulacion11 = 0.0f;
-	articulacion12 = 0.0f;
-
+	muevex = 2.0f;
+	movimientoX1 = 0.0f;
 	for (size_t i = 0; i < 1024; i++)
 	{
 		keys[i] = 0;
@@ -36,10 +22,10 @@ Window::Window(GLint windowWidth, GLint windowHeight)
 }
 int Window::Initialise()
 {
-	//Inicializaciï¿½n de GLFW
+	//Inicialización de GLFW
 	if (!glfwInit())
 	{
-		printf("Fallï¿½ inicializar GLFW");
+		printf("Falló inicializar GLFW");
 		glfwTerminate();
 		return 1;
 	}
@@ -51,7 +37,7 @@ int Window::Initialise()
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
 	//CREAR VENTANA
-	mainWindow = glfwCreateWindow(width, height, "Practica 05: Optimizacion y carga de modelos", NULL, NULL);
+	mainWindow = glfwCreateWindow(width, height, "Practica 07: Iluminacion 1", NULL, NULL);
 
 	if (!mainWindow)
 	{
@@ -59,7 +45,7 @@ int Window::Initialise()
 		glfwTerminate();
 		return 1;
 	}
-	//Obtener tamaï¿½o de Buffer
+	//Obtener tamaño de Buffer
 	glfwGetFramebufferSize(mainWindow, &bufferWidth, &bufferHeight);
 
 	//asignar el contexto
@@ -74,18 +60,18 @@ int Window::Initialise()
 
 	if (glewInit() != GLEW_OK)
 	{
-		printf("Fallï¿½ inicializaciï¿½n de GLEW");
+		printf("Falló inicialización de GLEW");
 		glfwDestroyWindow(mainWindow);
 		glfwTerminate();
 		return 1;
 	}
 
 	glEnable(GL_DEPTH_TEST); //HABILITAR BUFFER DE PROFUNDIDAD
-	// Asignar valores de la ventana y coordenadas
-
-	//Asignar Viewport
+							 // Asignar valores de la ventana y coordenadas
+							 
+							 //Asignar Viewport
 	glViewport(0, 0, bufferWidth, bufferHeight);
-	//Callback para detectar que se estï¿½ usando la ventana
+	//Callback para detectar que se está usando la ventana
 	glfwSetWindowUserPointer(mainWindow, this);
 }
 
@@ -94,7 +80,6 @@ void Window::createCallbacks()
 	glfwSetKeyCallback(mainWindow, ManejaTeclado);
 	glfwSetCursorPosCallback(mainWindow, ManejaMouse);
 }
-
 GLfloat Window::getXChange()
 {
 	GLfloat theChange = xChange;
@@ -109,6 +94,9 @@ GLfloat Window::getYChange()
 	return theChange;
 }
 
+
+
+
 void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, int mode)
 {
 	Window* theWindow = static_cast<Window*>(glfwGetWindowUserPointer(window));
@@ -117,92 +105,23 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 	{
 		glfwSetWindowShouldClose(window, GL_TRUE);
 	}
-
-
-	if (key == GLFW_KEY_E)
-	{
-		theWindow->rotax += 10.0;
-	}
-	if (key == GLFW_KEY_R)
-	{
-		theWindow->rotay += 10.0; //rotar sobre el eje y 10 grados
-	}
-	if (key == GLFW_KEY_T)
-	{
-		theWindow->rotaz += 10.0;
-	}
-	if (key == GLFW_KEY_F)
-	{
-		theWindow->articulacion1 += 10.0;
-	}
-
-	if (key == GLFW_KEY_G)
-	{
-		theWindow->articulacion2 += 5.0;
-		if (theWindow->articulacion2 > 45.0)
-			theWindow->articulacion2 = 45.0;
-	}
-	if (key == GLFW_KEY_H)
-	{
-		theWindow->articulacion2 -= 5.0;
-		if (theWindow->articulacion2 < -45.0)
-			theWindow->articulacion2 = -45.0;
-	}
-	if (key == GLFW_KEY_J)
-	{
-		theWindow->articulacion4 += 5.0;
-		if (theWindow->articulacion4 > 45.0)
-			theWindow->articulacion4 = 45.0;
-	}
-	if (key == GLFW_KEY_K)
-	{
-		theWindow->articulacion4 -= 5.0;
-		if (theWindow->articulacion4 < -45.0)
-			theWindow->articulacion4 = -45.0;
-	}
-	if (key == GLFW_KEY_L)
-	{
-		theWindow->articulacion5 += 5.0;
-	}
-	if (key == GLFW_KEY_O)
-	{
-		theWindow->articulacion6 += 5.0;
-		if (theWindow->articulacion6 > 45.0)
-			theWindow->articulacion6 = 45.0;
-	}
-	if (key == GLFW_KEY_P)
-	{
-		theWindow->articulacion6 -= 5.0;
-		if (theWindow->articulacion6 < -45.0)
-			theWindow->articulacion6 = -45.0;
-	}
 	if (key == GLFW_KEY_Y)
 	{
-		theWindow->articulacion8 += 5.0;
-		if (theWindow->articulacion8 > 45.0)
-			theWindow->articulacion8 = 45.0;
+		theWindow-> muevex += 1.0;
 	}
 	if (key == GLFW_KEY_U)
 	{
-		theWindow->articulacion8 -= 5.0;
-		if(theWindow->articulacion8<-45.0)
-			theWindow->articulacion8 = -45.0;
+		theWindow-> muevex -= 1.0;
 	}
-	if (key == GLFW_KEY_I)
+	if (key == GLFW_KEY_G)
 	{
-		theWindow->articulacion11 += 10.0;
+		theWindow->movimientoX1 += 1.0;
 	}
-	if (key == GLFW_KEY_T)
+	if (key == GLFW_KEY_H)
 	{
-		theWindow->articulacion12 += 10.0;
+		theWindow->movimientoX1 -= 1.0;
 	}
 
-
-	if (key == GLFW_KEY_D && action == GLFW_PRESS)
-	{
-		const char* key_name = glfwGetKeyName(GLFW_KEY_D, 0);
-		//printf("se presiono la tecla: %s\n",key_name);
-	}
 
 	if (key >= 0 && key < 1024)
 	{
