@@ -13,8 +13,11 @@ Window::Window(GLint windowWidth, GLint windowHeight)
 {
 	width = windowWidth;
 	height = windowHeight;
-	muevex = 2.0f;
-	movimientoX1 = 0.0f;
+	muevex = 0.0f;
+	prendida = true;
+	prendida1 = true;
+	lucespuntuales = 0.0f;
+	articulacion1 = 0.0f;
 	for (size_t i = 0; i < 1024; i++)
 	{
 		keys[i] = 0;
@@ -37,7 +40,7 @@ int Window::Initialise()
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
 	//CREAR VENTANA
-	mainWindow = glfwCreateWindow(width, height, "Practica 07: Iluminacion 1", NULL, NULL);
+	mainWindow = glfwCreateWindow(width, height, "Practica 08: Iluminacion 2", NULL, NULL);
 
 	if (!mainWindow)
 	{
@@ -67,9 +70,9 @@ int Window::Initialise()
 	}
 
 	glEnable(GL_DEPTH_TEST); //HABILITAR BUFFER DE PROFUNDIDAD
-							 // Asignar valores de la ventana y coordenadas
-							 
-							 //Asignar Viewport
+	// Asignar valores de la ventana y coordenadas
+
+	//Asignar Viewport
 	glViewport(0, 0, bufferWidth, bufferHeight);
 	//Callback para detectar que se está usando la ventana
 	glfwSetWindowUserPointer(mainWindow, this);
@@ -107,21 +110,36 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 	}
 	if (key == GLFW_KEY_Y)
 	{
-		theWindow-> muevex += 1.0;
+		theWindow->muevex += 1.0;
 	}
 	if (key == GLFW_KEY_U)
 	{
-		theWindow-> muevex -= 1.0;
+		theWindow->muevex -= 1.0;
 	}
 	if (key == GLFW_KEY_G)
 	{
-		theWindow->movimientoX1 += 1.0;
+		theWindow->articulacion1 += 10.0;
+		if (theWindow->articulacion1 > 90.0)
+			theWindow->articulacion1 = 90.0;
 	}
 	if (key == GLFW_KEY_H)
 	{
-		theWindow->movimientoX1 -= 1.0;
+		theWindow->articulacion1 -= 10.0;
+		if (theWindow->articulacion1 < 0.0)
+			theWindow->articulacion1 = 0.0;
 	}
-
+	if (key == GLFW_KEY_L) {
+		theWindow->lucespuntuales = 0.0f;
+	}
+	if(key == GLFW_KEY_K) {
+		theWindow->lucespuntuales = 1.0f;
+	}
+	if (key == GLFW_KEY_P && action == GLFW_PRESS) {
+		theWindow->prendida = !theWindow->prendida;
+	}
+	if (key == GLFW_KEY_O && action == GLFW_PRESS) {
+		theWindow->prendida1 = !theWindow->prendida1;
+	}
 
 	if (key >= 0 && key < 1024)
 	{

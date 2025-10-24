@@ -1,5 +1,5 @@
 /*
-Práctica 7: Iluminación 1 
+Práctica 8: Iluminación 2
 */
 //para cargar imagen
 #define STB_IMAGE_IMPLEMENTATION
@@ -42,11 +42,19 @@ std::vector<Shader> shaderList;
 
 Camera camera;
 
-Texture brickTexture;
-Texture dirtTexture;
 Texture plainTexture;
 Texture pisoTexture;
 Texture AgaveTexture;
+Texture dado8caras;
+
+
+
+Model Kitt_M;
+Model Llanta_M;
+Model Blackhawk_M;
+Model Lampara_M;
+Model Luciernaga_M;
+
 
 Model Coche_base;
 Model Coche_cofre;
@@ -55,11 +63,6 @@ Model Coche_llantaDelanteraDerecha;
 Model Coche_llantaTraseraIzquierda;
 Model Coche_llantaTraseraDerecha;
 Model Coche_espejo;
-
-
-Model Kitt_M;
-Model Llanta_M;
-Model Blackhawk_M;
 
 
 Skybox skybox;
@@ -76,9 +79,14 @@ static double limitFPS = 1.0 / 60.0;
 
 // luz direccional
 DirectionalLight mainLight;
+// para declarar varias luces de tipo spotlight
+SpotLight spotLights[MAX_SPOT_LIGHTS];
+
 //para declarar varias luces de tipo pointlight
 PointLight pointLights[MAX_POINT_LIGHTS];
-SpotLight spotLights[MAX_SPOT_LIGHTS];
+
+
+
 
 // Vertex Shader
 static const char* vShader = "shaders/shader_light.vert";
@@ -166,22 +174,83 @@ void CreateObjects()
 
 
 	};
-	
-	Mesh *obj1 = new Mesh();
+
+	unsigned int octaedro_indices[] = {
+		0, 1, 2,
+		3, 4, 5,
+		6, 7, 8,
+		9, 10, 11,
+		12, 13, 14,
+		15, 16, 17,
+		18, 19, 20,
+		21, 22, 23,
+	};
+
+
+	GLfloat octaedro_vertices[] = {
+
+		//x		y		z		S		T			NX		NY		NZ
+		// 3
+		1.0f,  0.0f,  0.0f,		0.655f, 0.4f,		-0.577f, 0.577f,  -0.577f,
+		0.0f,  0.0f,  1.0f,		0.34f,	0.58f,		-0.577f, 0.577f,  -0.577f,
+		0.0f,  -1.0f,  0.0f,	0.34f,	0.22f,		-0.577f, 0.577f,  -0.577f,
+
+		// 2
+		-1.0f, 0.0f,  0.0f,	    0.03f,  0.41f,		0.577f, 0.577f,  -0.577f,
+		0.0f,  0.0f,  1.0f,		0.32f,	0.58f,		0.577f, 0.577f,  -0.577f,
+		0.0f, -1.0f,  0.0f,		0.32f,	0.22f,		0.577f, 0.577f,  -0.577f,
+
+		// 1
+		-1.0f, 0.0f, 0.0f,		0.01f,  0.39f,		0.577f, 0.577f,  0.577f,
+		0.0f,  0.0f, -1.0f,		0.01f,	0.02f,		0.577f, 0.577f,  0.577f,
+		0.0f,  -1.0f, 0.0f,		0.31f,	0.21f,		0.577f, 0.577f,  0.577f,
+
+		// 4
+		1.0f,  0.0f,   0.0f,	0.65f,  0.39f,		-0.577f, 0.577f,  0.577f,
+		0.0f,  0.0f,  -1.0f,	0.65f,	0.02f,		-0.577f, 0.577f,  0.577f,
+		0.0f,  -1.0f,  0.0f,	0.35f,	0.21f,		-0.577f, 0.577f,  0.577f,
+
+		// 6
+		1.0f, 0.0f,  0.0f,		0.65f,  0.42f,		-0.577f, -0.577f,  -0.577f,
+		0.0f, 0.0f,  1.0f,		0.35f,	0.6f,		-0.577f, -0.577f,  -0.577f,
+		0.0f, 1.0f,  0.0f,		0.65f,	0.78f,		-0.577f, -0.577f,  -0.577f,
+
+		// 5
+		-1.0f, 0.0f,  0.0f,	    0.34f, 0.98f,		0.577f, -0.577f,  -0.577f,
+		0.0f,  0.0f,  1.0f,		0.34f,	0.61f,		0.577f, -0.577f,  -0.577f,
+		0.0f,  1.0f,  0.0f,		0.65f,	0.8f,		0.577f, -0.577f,  -0.577f,
+
+		// 8
+		-1.0f, 0.0f, 0.0f,		0.99f,  0.621f,		0.577f, -0.577f,  0.577f,
+		0.0f, 0.0f, -1.0f,		0.99f,  0.99f,		0.577f, -0.577f,  0.577f,
+		0.0f,  1.0f, 0.0f,		0.679f,	0.8f,		0.577f, -0.577f,  0.577f,
+
+		// 7
+		1.0f,  0.0f,   0.0f,	0.68f,  0.42f,		-0.577f, -0.577f,  0.577f,
+		0.0f,  0.0f,  -1.0f,	0.99f,	0.6f,		-0.577f, -0.577f,  0.577f,
+		0.0f,  1.0f,  0.0f,		0.68f,	0.78f,		-0.577f, -0.577f,  0.577f,
+
+	};
+
+	Mesh* obj1 = new Mesh();
 	obj1->CreateMesh(vertices, indices, 32, 12);
 	meshList.push_back(obj1);
 
-	Mesh *obj2 = new Mesh();
+	Mesh* obj2 = new Mesh();
 	obj2->CreateMesh(vertices, indices, 32, 12);
 	meshList.push_back(obj2);
 
-	Mesh *obj3 = new Mesh();
+	Mesh* obj3 = new Mesh();
 	obj3->CreateMesh(floorVertices, floorIndices, 32, 6);
 	meshList.push_back(obj3);
 
 	Mesh* obj4 = new Mesh();
 	obj4->CreateMesh(vegetacionVertices, vegetacionIndices, 64, 12);
 	meshList.push_back(obj4);
+
+	Mesh* octaedro = new Mesh();
+	octaedro->CreateMesh(octaedro_vertices, octaedro_indices, 192, 24);
+	meshList.push_back(octaedro);
 
 	calcAverageNormals(indices, 12, vertices, 32, 8, 5);
 
@@ -190,9 +259,11 @@ void CreateObjects()
 }
 
 
+
+
 void CreateShaders()
 {
-	Shader *shader1 = new Shader();
+	Shader* shader1 = new Shader();
 	shader1->CreateFromFiles(vShader, fShader);
 	shaderList.push_back(*shader1);
 }
@@ -209,10 +280,6 @@ int main()
 
 	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.3f, 0.5f);
 
-	brickTexture = Texture("Textures/brick.png");
-	brickTexture.LoadTextureA();
-	dirtTexture = Texture("Textures/dirt.png");
-	dirtTexture.LoadTextureA();
 	plainTexture = Texture("Textures/plain.png");
 	plainTexture.LoadTextureA();
 	pisoTexture = Texture("Textures/piso.tga");
@@ -220,13 +287,16 @@ int main()
 	AgaveTexture = Texture("Textures/Agave.tga");
 	AgaveTexture.LoadTextureA();
 
+	dado8caras = Texture("Textures/dado8caras.png");
+	dado8caras.LoadTextureA();
+
 	Kitt_M = Model();
 	Kitt_M.LoadModel("Models/kitt_optimizado.obj");
 	Llanta_M = Model();
 	Llanta_M.LoadModel("Models/llanta_optimizada.obj");
 	Blackhawk_M = Model();
 	Blackhawk_M.LoadModel("Models/uh60.obj");
-	
+
 	Coche_base = Model();
 	Coche_base.LoadModel("Models/carro.obj");
 	Coche_cofre = Model();
@@ -242,6 +312,11 @@ int main()
 	Coche_espejo = Model();
 	Coche_espejo.LoadModel("Models/espejo.obj");
 
+	Lampara_M = Model();
+	Lampara_M.LoadModel("Models/rv_lamp_post_4.obj");
+
+	Luciernaga_M = Model();
+	Luciernaga_M.LoadModel("Models/Firefly_Fred.fbx");
 
 	std::vector<std::string> skyboxFaces;
 	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_rt.tga");
@@ -261,14 +336,6 @@ int main()
 	mainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
 		0.3f, 0.3f,
 		0.0f, 0.0f, -1.0f);
-	//contador de luces puntuales
-	unsigned int pointLightCount = 0;
-	//Declaración de primer luz puntual
-	pointLights[0] = PointLight(1.0f, 0.0f, 0.0f,
-		0.0f, 1.0f,
-		-6.0f, 1.5f, 1.5f,
-		0.3f, 0.2f, 0.1f);
-	pointLightCount++;
 
 	unsigned int spotLightCount = 0;
 	//linterna
@@ -289,27 +356,110 @@ int main()
 		15.0f);
 	spotLightCount++;
 
-	// faro coche
-	spotLights[2] = SpotLight(0.0f, 0.0f, 1.0f,
-		1.0f, 2.0f,
+	// Luz spotlight del cofre
+	spotLights[2] = SpotLight(1.0f, 0.0f, 0.0f,
+		0.5f, 2.0f,
 		0.0f, 0.0f, 0.0f,
-		0.0f, -1.0f, 0.0f,
+		0.0f, -5.0f, 0.0f,
 		1.0f, 0.0f, 0.0f,
-		15.0f);
+		5.0f);
 	spotLightCount++;
-	
+
+	// Spotlight hacia enfrente del coche
+	spotLights[3] = SpotLight(0.48f, 0.344f, 0.48f,
+		1.0f, 2.0f,
+		5.0f, 10.0f, 0.0f,
+		0.0f, -5.0f, 0.0f,
+		1.0f, 0.0f, 0.0f,
+		10.0f);
+	spotLightCount++;
+
+
+	// Spotlight hacia atras del coche
+	spotLights[4] = SpotLight(0.48f, 0.344f, 0.48f,
+		1.0f, 2.0f,
+		5.0f, 10.0f, 0.0f,
+		0.0f, -5.0f, 0.0f,
+		1.0f, 0.0f, 0.0f,
+		10.0f);
+	spotLightCount++;
+
 	//se crean mas luces puntuales y spotlight 
+
+	//contador de luces puntuales
+	unsigned int pointLightCount = 0;
+
+
+	//Declaración de primer arreglo de luces puntuales
+	//lampara
+	pointLights[0] = PointLight(1.0f, 1.0f, 1.0f,
+		0.7f, 0.7f,
+		0.0f, 0.0f, 0.0f,
+		1.0f, 0.01f, 0.03f);
+	pointLightCount++;
+	//luciernaga
+	pointLights[1] = PointLight(1.0f, 1.0f, 0.0f,
+		0.7f, 0.7f,
+		-3.0f, 1.0f, 8.0f,
+		1.0f, 0.01f, 0.03f);
+	pointLightCount++;
+
+
 
 	GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformEyePosition = 0,
 		uniformSpecularIntensity = 0, uniformShininess = 0;
 	GLuint uniformColor = 0;
 	glm::mat4 projection = glm::perspective(45.0f, (GLfloat)mainWindow.getBufferWidth() / mainWindow.getBufferHeight(), 0.1f, 1000.0f);
 
+
 	glm::mat4 model(1.0);
+	glm::mat4 modelLampara(1.0);
+	modelLampara = glm::translate(modelLampara, glm::vec3(0.0f, -1.0f, 30.0f));
+	modelLampara = glm::scale(modelLampara, glm::vec3(0.5f, 0.5f, 0.5f));
+	glm::mat4 modelLuciernaga(1.0);
+	modelLuciernaga = glm::translate(modelLuciernaga, glm::vec3(-30.0f, 5.0f, 30.0f));
+	modelLuciernaga = glm::scale(modelLuciernaga, glm::vec3(2.0f, 2.0f, 2.0f));
+	modelLuciernaga = glm::rotate(modelLuciernaga, 180.0f * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+	modelLuciernaga = glm::rotate(modelLuciernaga, -90.0f * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+
+	glm::mat4 modelCocheInicial(1.0);
+	modelCocheInicial = glm::translate(modelCocheInicial, glm::vec3(15.0f, 2.5f, -1.5f));
+	modelCocheInicial = glm::rotate(modelCocheInicial, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+	glm::mat4 modelCoche(1.0);
+	modelCoche = modelCocheInicial;
+	glm::mat4 modelCofre(1.0);
+	modelCofre = modelCoche;
+	modelCofre = glm::translate(modelCofre, glm::vec3(0.05f, 2.5f, -7.5f));
 	glm::mat4 modelaux(1.0);
 	glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
-	glm::vec3 posicion_respecto_a_coche;
-	glm::vec3 direccion_respecto_a_coche;
+	glm::vec3 lowerLight = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 direccionRespectoACofre = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 posicionRespectoACofre = glm::vec3(0.0f, 0.0f, 0.0f);
+
+	glm::vec3 posicionRespectoACoche = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 direccionRespectoACoche = glm::vec3(0.0f, 0.0f, 0.0f);
+
+	glm::vec3 posicionRespectoALampara = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 posicionRespectoALuciernaga = glm::vec3(0.0f, 0.0f, 0.0f);
+
+
+	GLfloat ultimoMueveX = 0.0f, actualMueveX = 0.0f;
+	bool avanzando = true;
+	bool retrocediendo = false;
+
+	// para guardar el estado actual de las luces puntuales 
+	PointLight pointLightsActuales[MAX_POINT_LIGHTS];
+
+	// para guardar el estado actual de las luces spotlight
+	SpotLight spotLightsActuales[MAX_SPOT_LIGHTS];
+
+	// para guardar el estado actual de las luces puntuales
+	unsigned int pointLightsActualesCount = 0;
+
+	// para guardar el estado actual de las luces spotlight
+	unsigned int spotLightsActualesCount = 0;
+
+
 
 	////Loop mientras no se cierra la ventana
 	while (!mainWindow.getShouldClose())
@@ -334,7 +484,7 @@ int main()
 		uniformView = shaderList[0].GetViewLocation();
 		uniformEyePosition = shaderList[0].GetEyePositionLocation();
 		uniformColor = shaderList[0].getColorLocation();
-		
+
 		//información en el shader de intensidad especular y brillo
 		uniformSpecularIntensity = shaderList[0].GetSpecularIntensityLocation();
 		uniformShininess = shaderList[0].GetShininessLocation();
@@ -345,90 +495,182 @@ int main()
 
 		// luz ligada a la cámara de tipo flash
 		//sirve para que en tiempo de ejecución (dentro del while) se cambien propiedades de la luz
-			glm::vec3 lowerLight = camera.getCameraPosition();
+		lowerLight = camera.getCameraPosition();
 		lowerLight.y -= 0.3f;
 		spotLights[0].SetFlash(lowerLight, camera.getCameraDirection());
 
-		//información al shader de fuentes de iluminación
+		// Se obtiene la posicion del coche ya con su movimiento para poder posicionar la luz
+		modelCoche = modelCocheInicial;
+		modelCoche = glm::translate(modelCoche, glm::vec3(0.0f, 0.0f, -mainWindow.getmuevex()));
+		modelaux = modelCoche;
+		modelCofre = modelCoche;
+
+		// se obtiene posicion y rotacion del cofre
+		modelCofre = glm::translate(modelCofre, glm::vec3(0.3f, 2.2f, -6.1f));
+		modelCofre = glm::rotate(modelCofre, glm::radians(mainWindow.getarticulacion1()), glm::vec3(1.0f, 0.0f, 0.0f));
+
+		// Se posiciona y direcciona adecuadamente la spotlight del cofre del coche
+		posicionRespectoACofre = glm::vec3(modelCofre[3]);
+		posicionRespectoACofre += glm::vec3(5.0f, 2.0f, 0.0f);
+		direccionRespectoACofre = -glm::vec3(glm::normalize(modelCofre[2]));
+		spotLights[2].SetFlash(posicionRespectoACofre, direccionRespectoACofre);
+
+		// se posiciona luz delantera y trasera del coche
+		// delantera
+		posicionRespectoACoche = glm::vec3(modelCoche[3]);
+		posicionRespectoACoche += glm::vec3(10.0f, -1.0f, 0.0f);
+		direccionRespectoACoche = -glm::vec3(glm::normalize(modelCoche[2]));
+		spotLights[3].SetFlash(posicionRespectoACoche, direccionRespectoACoche);
+		//trasera
+		posicionRespectoACoche = glm::vec3(modelCoche[3]);
+		posicionRespectoACoche += glm::vec3(-10.0f, -1.0f, 0.0f);
+		direccionRespectoACoche = glm::vec3(glm::normalize(modelCoche[2]));
+		spotLights[4].SetFlash(posicionRespectoACoche, direccionRespectoACoche);
+
+
+		// se posiciona luz de lampara y de luciernaga
+		// lampara
+		model = modelLampara;
+		model = glm::translate(model, glm::vec3(-2.5f, 9.5f, 0.0f));
+		posicionRespectoALampara = glm::vec3(model[3]);
+		pointLights[0].SetPos(posicionRespectoALampara);
+		
+		// luciernaga
+		model = modelLuciernaga;
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 3.0f));
+		posicionRespectoALuciernaga = glm::vec3(model[3]);
+		pointLights[1].SetPos(posicionRespectoALuciernaga);
+
+		if (mainWindow.getprendida()) {
+			pointLightsActuales[pointLightsActualesCount++] = pointLights[0];
+		}
+		if(mainWindow.getprendida1()) {
+			pointLightsActuales[pointLightsActualesCount++] = pointLights[1];
+		}
+
+		actualMueveX = mainWindow.getmuevex();
+		
+		if(ultimoMueveX > actualMueveX) {
+			retrocediendo = true;
+			avanzando = false;
+		}
+		else if(ultimoMueveX < actualMueveX) {
+			avanzando = true;
+			retrocediendo = false;
+		}
+
+
+		if(avanzando) {
+			spotLightsActuales[spotLightsActualesCount++] = spotLights[3];
+		}
+		else if(retrocediendo) {
+			spotLightsActuales[spotLightsActualesCount++] = spotLights[4];
+		}
+
+
+		// Se anade la linterna a spotlights actuales
+		spotLightsActuales[spotLightsActualesCount++] = spotLights[0];
+
+
+		// Se anade la luz spotlight del cofre a las luces spotlights actuales ya que esta siempre va a estar encendida
+		spotLightsActuales[spotLightsActualesCount++] = spotLights[2];
+
+		//información al shader de fuentes de iluminaciónsss
 		shaderList[0].SetDirectionalLight(&mainLight);
-		shaderList[0].SetPointLights(pointLights, pointLightCount);
-		shaderList[0].SetSpotLights(spotLights, spotLightCount);
+		shaderList[0].SetSpotLights(spotLightsActuales, spotLightsActualesCount);
+		shaderList[0].SetPointLights(pointLightsActuales, pointLightsActualesCount);
+
+
+		pointLightsActualesCount = spotLightsActualesCount = 0;
+		ultimoMueveX = actualMueveX;
 
 
 
+		color = glm::vec3(1.0f, 1.0f, 1.0f);
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(0.0f, -1.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(30.0f, 1.0f, 30.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
-
 		pisoTexture.UseTexture();
 		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
 
 		meshList[2]->RenderMesh();
 
 
+
 		// Base del coche
-		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(15.0f, 1.8f, -1.5f));
-		model = glm::translate(model, glm::vec3(0.0f + mainWindow.getmuevex(), 0.5f, -3.0f));
-		model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
-		modelaux = model;
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(modelCoche));
 		Coche_base.RenderModel();
 
-		// Luz del coche
-
-		model = modelaux;
-		model = glm::translate(model, glm::vec3(0.0f, 0.5f, -10.0f));
-		posicion_respecto_a_coche = glm::vec3(model[3]);
-		direccion_respecto_a_coche = -glm::vec3(glm::normalize(model[2]));
-
-		spotLights[2].SetFlash(posicion_respecto_a_coche, direccion_respecto_a_coche);
-
-
-
 		// Espejo
-
 		model = modelaux;
-		model = glm::translate(model, glm::vec3(0.0f, 0.2f, 0.0f));
+		model = glm::translate(model, glm::vec3(0.0f, 0.2f, 0.4f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Coche_espejo.RenderModel();
 
 		// Cofre del coche
-		model = modelaux;
-		model = glm::translate(model, glm::vec3(0.05f, 2.5f, -7.5f));
-		model = glm::scale(model, glm::vec3(0.9f, 0.9f, 0.9f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(modelCofre));
 		Coche_cofre.RenderModel();
 
 		// Llanta Delantera Izquierda
 		model = modelaux;
-		model = glm::translate(model, glm::vec3(-7.2f, -1.0f, -11.6f));
+		model = glm::translate(model, glm::vec3(-7.2f, -0.7f, -11.8f));
+		model = glm::rotate(model, glm::radians(mainWindow.getmuevex() * 10.0f), glm::vec3(-1.0f, 0.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Coche_llantaDelanteraIzquierda.RenderModel();
 
 		// Llanta Delantera Derecha
 		model = modelaux;
-		model = glm::translate(model, glm::vec3(7.8f, -1.0f, -11.6f));
+		model = glm::translate(model, glm::vec3(7.8f, -0.7f, -11.8f));
+		model = glm::rotate(model, glm::radians(mainWindow.getmuevex() * 10.0f), glm::vec3(-1.0f, 0.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Coche_llantaDelanteraDerecha.RenderModel();
 
 		// Llanta Trasera Izquierda
 		model = modelaux;
-		model = glm::translate(model, glm::vec3(-7.7f, -1.0f, 10.5f));
+		model = glm::translate(model, glm::vec3(-7.7f, -0.48f, 10.8f));
+		model = glm::scale(model, glm::vec3(1.1f, 1.1f, 1.1f));
+		model = glm::rotate(model, glm::radians(mainWindow.getmuevex() * 10.0f), glm::vec3(-1.0f, 0.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Coche_llantaTraseraIzquierda.RenderModel();
 
 		// Llanta Trasera Derecha
 		model = modelaux;
-		model = glm::translate(model, glm::vec3(8.0f, -1.0f, 10.5f));
+		model = glm::translate(model, glm::vec3(8.0f, -0.48f, 10.8f));
+		model = glm::scale(model, glm::vec3(1.1f, 1.1f, 1.1f));
+		model = glm::rotate(model, glm::radians(mainWindow.getmuevex() * 10.0f), glm::vec3(-1.0f, 0.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Coche_llantaTraseraDerecha.RenderModel();
-	
+
+
+		// Pared para observar el movimiento de la spotlight del cofre
+		color = glm::vec3(1.0f, 1.0f, 1.0f);
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(60.0f, 99.0f, -1.0f));
+		model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::scale(model, glm::vec3(10.0f, 1.0f, 1.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		pisoTexture.UseTexture();
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+
+		meshList[2]->RenderMesh();
+
+
+		// Lampara
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(modelLampara));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		Lampara_M.RenderModel();
+
+		// Luciernaga
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(modelLuciernaga));
+		Luciernaga_M.RenderModel();
+
+
 
 		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(0.0f, 5.0f, 6.0));
+		model = glm::translate(model, glm::vec3(0.0f, 5.0f, -15.0));
 		model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
 		model = glm::rotate(model, -90 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
 		model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
@@ -440,7 +682,7 @@ int main()
 		model = glm::translate(model, glm::vec3(0.0f, 1.0f, -4.0f));
 		model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		
+
 		//blending: transparencia o traslucidez
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
