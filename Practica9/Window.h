@@ -14,15 +14,24 @@ public:
 	GLfloat getXChange();
 	GLfloat getYChange();
 	GLfloat getmuevex() { return muevex; }
-	GLfloat getMovimientoX1() { return movimientoX1; }
+	GLfloat getlucespuntuales() { return lucespuntuales; }
+	GLfloat getprendida() { return prendida; }
+	GLfloat getprendida1() { return prendida1; }
+	GLfloat getarticulacion1() { return articulacion1; }
+	bool getanimacionPuerta() { return animacionPuerta; }
+	bool getLanzarDado() { return lanzarDado; }
+	void setLanzarDado(bool valor) { lanzarDado = valor; }
+	void setanimacionPuerta(bool valor) { animacionPuerta = valor; }
+
 	bool getShouldClose() {
-		return  glfwWindowShouldClose(mainWindow);}
+		return  glfwWindowShouldClose(mainWindow);
+	}
 	bool* getsKeys() { return keys; }
 	void swapBuffers() { return glfwSwapBuffers(mainWindow); }
-	
+
 	~Window();
-private: 
-	GLFWwindow *mainWindow;
+private:
+	GLFWwindow* mainWindow;
 	GLint width, height;
 	bool keys[1024];
 	GLint bufferWidth, bufferHeight;
@@ -32,8 +41,13 @@ private:
 	GLfloat xChange;
 	GLfloat yChange;
 	GLfloat muevex;
-	GLfloat movimientoX1;
+	GLboolean prendida;
+	GLboolean prendida1;
+	GLfloat lucespuntuales;
+	GLfloat  articulacion1;
+	bool animacionPuerta;
 	bool mouseFirstMoved;
+	bool lanzarDado;
 	static void ManejaTeclado(GLFWwindow* window, int key, int code, int action, int mode);
 	static void ManejaMouse(GLFWwindow* window, double xPos, double yPos);
 
